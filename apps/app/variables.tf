@@ -46,6 +46,10 @@ variable "location" {
   type = string
 }
 
+variable "accesses_real_data" {
+  type = bool
+}
+
 variable "webapps_subnet_id" {
   type = string
 }
@@ -80,14 +84,18 @@ variable "github_owner" {
 
 variable "app_config" {
   type = object({
-    name         = string
-    description  = string
-    owners       = set(string)
-    contributors = set(string)
+    name             = string
+    description      = string
+    add_staging_slot = optional(bool, false)
 
-    managed_repo = object({
-      private               = bool
-      template              = string,
+    managed_repo = optional(object({
+      private      = bool
+      template     = string
+      owners       = set(string)
+      contributors = set(string)
+    }))
+
+    branch = object({
       num_of_approvals      = optional(number, 1),
       dismiss_stale_reviews = optional(bool, false)
     })

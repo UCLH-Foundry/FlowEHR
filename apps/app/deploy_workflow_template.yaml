@@ -1,0 +1,14 @@
+name: Deploy ${environment}
+
+on:
+  push:
+    branches:
+      - "${branch_name}"
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/${reusable_workflow_filename}
+    name: Deploy ${environment}
+    with:
+      environment: ${environment}
+    secrets: inherit

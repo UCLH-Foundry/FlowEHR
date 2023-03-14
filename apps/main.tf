@@ -19,6 +19,7 @@ module "app" {
   naming_suffix             = var.naming_suffix
   environment               = var.environment
   local_mode                = var.local_mode
+  accesses_real_data        = var.accesses_real_data
   webapps_subnet_id         = var.serve_webapps_subnet_id
   resource_group_name       = var.core_rg_name
   location                  = var.core_rg_location

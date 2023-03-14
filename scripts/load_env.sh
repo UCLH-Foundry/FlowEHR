@@ -59,7 +59,7 @@ export_config_from_yaml () {
     export $(yq e "$GET_LEAF_KEYS|$TF_KEYS| $FORMAT_FOR_ENV_EXPORT" "$config_file_path")
 
     # Export the data source connections as json
-    DATA_SOURCE_CONNECTIONS="$(yq -o=json eval '.data_source_connections' config.yaml)"
+    DATA_SOURCE_CONNECTIONS="$(yq -o=json eval '.data_source_connections' "$config_file_path")"
     if [ "$DATA_SOURCE_CONNECTIONS" == "null" ]; then
         DATA_SOURCE_CONNECTIONS='[]'
     fi

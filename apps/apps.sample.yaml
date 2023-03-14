@@ -2,14 +2,16 @@
 dash_seedling: # unique ID for the app
   name: Dash Seedling
   description: Hello world app for Dash
-  owners: # GitHub usernames of owners to add to repo (for reviews)
-    - octocat
-  contributors: # contributors to add to repo
-    - octokitten
+  accesses_real_data: false
+  add_staging_slot: false
   managed_repo: # details for created repo
     private: false # repo visibility
-    template: Dash-Seedling
+    template: UCLH-Foundry/Dash-Seedling
+    owners: # GitHub usernames of owners to add to repo (for reviews)
+      - octocat
+    contributors: # contributors to add to repo
+      - octokitten
+  branch: # details of the branch created with a name: <environment>
     num_of_approvals: 1
-    dismiss_stale_reviews: false
   env: # any env vars to pass to the app container
     WEBSITES_PORT: 8000

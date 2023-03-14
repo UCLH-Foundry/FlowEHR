@@ -34,6 +34,10 @@ variable "local_mode" {
   type = bool
 }
 
+variable "accesses_real_data" {
+  type = bool
+}
+
 variable "core_rg_name" {
   type = string
 }

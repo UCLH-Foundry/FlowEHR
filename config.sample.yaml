@@ -5,6 +5,7 @@ environment: __CHANGE_ME__
 arm_subscription_id: __CHANGE_ME__
 devcontainer_acr_name: __CHANGE_ME__
 local_mode: false
+accesses_real_data: false
 
 data_source_connections:
   - example:

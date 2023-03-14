@@ -74,15 +74,19 @@ transform-artifacts: az-login ## Build transform artifacts
 infrastructure-serve: az-login ## Deploy serve infrastructure
 	$(call terragrunt,apply,infrastructure/serve)
 
-test: infrastructure apps destroy  ## Test by deploy->destroy
+test: infrastructure test-pipelines apps destroy  ## Test by deploy->destroy
 
-test-transform: infrastructure-transform destroy  ## Test transform deploy->destroy
+test-pipelines:
+	$(call target_title, "Test Transform Pipelines") \
+	&& ${MAKEFILE_DIR}/transform/run_pipelines.sh
+
+test-transform: infrastructure-transform test-pipelines destroy  ## Test transform deploy->destroy
 
 test-serve: infrastructure-serve destroy  ## Test transform deploy->destroy
 
-test-without-core-destroy: infrastructure apps destroy-non-core ## Test non-core deploy->destroy destroying core
+test-without-core-destroy: infrastructure test-pipelines apps destroy-non-core ## Test non-core deploy->destroy destroying core
 
-test-transform-without-core-destroy: infrastructure-transform destroy-non-core  ## Test transform deploy->destroy destroying core
+test-transform-without-core-destroy: infrastructure-transform test-pipelines destroy-non-core  ## Test transform deploy->destroy destroying core
 
 test-serve-without-core-destroy: infrastructure-serve destroy-non-core  ## Test serve deploy->destroy without destroying core
 

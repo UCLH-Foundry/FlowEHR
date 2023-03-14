@@ -19,3 +19,7 @@ output "feature_store_server_name" {
 output "feature_store_db_name" {
   value = azurerm_mssql_database.feature_database.name
 }
+
+output "adf_name" {
+  value = azurerm_data_factory.adf.name
+}

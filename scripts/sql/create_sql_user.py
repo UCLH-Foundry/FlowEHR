@@ -14,12 +14,13 @@
 
 import pyodbc
 import os
+import json
 
 server = os.environ.get("SERVER")
 database = os.environ.get("DATABASE")
 client_id = os.environ.get("CLIENT_ID")
 client_secret = os.environ.get("CLIENT_SECRET")
-login_to_create = os.environ.get("LOGIN_TO_CREATE")
+users_to_create = os.environ.get("USERS_TO_CREATE")
 
 
 def create_con_str(db: str) -> str:
@@ -27,29 +28,37 @@ def create_con_str(db: str) -> str:
     return f"DRIVER={driver};SERVER={server};DATABASE={db};ENCRYPT=yes;Authentication=ActiveDirectoryServicePrincipal;UID={client_id};PWD={client_secret}"  # noqa: E501
 
 
+# Map users
+users_data = json.loads(users_to_create)
+
 # connect to master database to create login
 cnxn = pyodbc.connect(create_con_str("master"))
 cursor = cnxn.cursor()
 
-query = f"""
-IF NOT EXISTS(SELECT principal_id FROM sys.server_principals WHERE name = '{login_to_create}') BEGIN
-    CREATE LOGIN [{login_to_create}]
-    FROM EXTERNAL PROVIDER
-END
-"""  # noqa: E501
-cursor.execute(query)
+for user in users_data["users"]:
+    query = f"""
+    IF NOT EXISTS(SELECT principal_id FROM sys.server_principals WHERE name = '{user['name']}') BEGIN
+        CREATE LOGIN [{user['name']}]
+        FROM EXTERNAL PROVIDER
+    END
+    """  # noqa: E501
+    cursor.execute(query)
+
 cnxn.commit()
 
-# connect to target feature database to create user + assign as dbo
 cnxn = pyodbc.connect(create_con_str(database))
 cursor = cnxn.cursor()
 
-query = f"""
-IF NOT EXISTS(SELECT principal_id FROM sys.database_principals WHERE name = '{login_to_create}') BEGIN
-    CREATE USER [{login_to_create}] FROM EXTERNAL PROVIDER
-    EXEC sp_addrolemember 'db_owner', [{login_to_create}]
-END
-"""  # noqa: E501
+for user in users_to_create:
+    # connect to target feature database to create user + assign as dbo
+    query = f"""
+    IF NOT EXISTS(SELECT principal_id FROM sys.database_principals WHERE name = '{user['name']}') BEGIN
+        CREATE USER [{user['name']}] FROM EXTERNAL PROVIDER
+        EXEC sp_addrolemember {user['role']}, [{user['name']}]
+    END
+    """  # noqa: E501
 
-cursor.execute(query)
+    cursor.execute(query)
+
 cnxn.commit()
+cnxn.close()

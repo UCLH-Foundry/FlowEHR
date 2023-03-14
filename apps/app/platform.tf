@@ -158,4 +158,15 @@ resource "azurerm_role_assignment" "webapp_sp_slot_swap" {
   role_definition_name = azurerm_role_definition.slot_swap[0].name
 }
 
+resource "azuread_group_member" "web_app_in_app_ad_group" {
+  group_object_id  = var.apps_ad_group_principal_id
+  member_object_id = azurerm_linux_web_app.app.identity[0].principal_id
+}
+
+resource "azuread_group_member" "contributors_in_dev_ad_group" {
+  for_each         = var.app_config.contributors
+  group_object_id  = var.developers_ad_group_principal_id
+  member_object_id = each.value
+}
+
 // TODO: once Feature Store SQL SPN stuff is in, add connection from App Service here

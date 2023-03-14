@@ -60,6 +60,10 @@ dependency "transform" {
   mock_outputs = {
     feature_store_server_name = "transform_feature_store_server_name"
     feature_store_db_name     = "transform_feature_store_db_name"
+    apps_ad_group_display_name = "transform_apps_ad_group_display_name"
+    developers_ad_group_display_name = "transform_developers_ad_group_display_name"
+    apps_ad_group_principal_id = "transform_apps_ad_group_principal_id"
+    developers_ad_group_principal_id = "transform_developers_ad_group_principal_id"
   }
   mock_outputs_allowed_terraform_commands = ["destroy"]
 }
@@ -82,13 +86,18 @@ inputs = {
   core_kv_id              = dependency.core.outputs.core_kv_id
   core_log_analytics_name = dependency.core.outputs.core_log_analytics_name
 
-  transform_feature_store_server_name = dependency.transform.outputs.feature_store_server_name
-  transform_feature_store_db_name     = dependency.transform.outputs.feature_store_db_name
+  transform_feature_store_server_name  = dependency.transform.outputs.feature_store_server_name
+  transform_feature_store_db_name      = dependency.transform.outputs.feature_store_db_name
+  transform_apps_ad_group_display_name = dependency.transform.outputs.apps_ad_group_display_name
+  transform_developers_ad_group_display_name = dependency.transform.outputs.developers_ad_group_display_name
+  transform_apps_ad_group_principal_id = dependency.transform.outputs.apps_ad_group_principal_id
+  transform_developers_ad_group_principal_id = dependency.transform.outputs.developers_ad_group_principal_id
 
   serve_app_service_plan_name = dependency.serve.outputs.app_service_plan_name
   serve_acr_name              = dependency.serve.outputs.acr_name
   serve_cosmos_account_name   = dependency.serve.outputs.cosmos_account_name
   serve_webapps_subnet_id     = dependency.serve.outputs.webapps_subnet_id
+
 
   github_owner = get_env("GITHUB_OWNER", "")
 }
